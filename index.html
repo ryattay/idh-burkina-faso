@@ -9,7 +9,13 @@
     <h1> Une visualisation de l'IDH au Burkina Faso</h1>
 
  <!-- calls the d3js language js library. Need this because network.js will call resources from this library -->
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="module">
+
+    import * as d3 from "https://cdn.skypack.dev/d3@7";
+
+    const div = d3.selectAll("div");
+
+  </script>
  <!-- calls the actual script to create visualization in "." root folder, "js" folder, and "network.js" -->
     <script src="./js/graph.js"></script>
 
