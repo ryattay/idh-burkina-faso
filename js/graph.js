@@ -1,7 +1,8 @@
 // Copyright 2021 Observable, Inc.
 // Released under the ISC license.
 // https://observablehq.com/@d3/line-with-tooltip
-function LineChart("./data/aapl.csv", {
+
+function LineChart(aapl, {
   x = ([x]) => x, // given d in data, returns the (temporal) x-value
   y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
   title, // given d in data, returns the title text
@@ -143,3 +144,5 @@ function LineChart("./data/aapl.csv", {
 
   return Object.assign(svg.node(), {value: null});
 }
+
+aapl = FileAttachment("./data/aapl.csv").csv({typed: true})
