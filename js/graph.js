@@ -1,146 +1,122 @@
-// Copyright 2021 Observable, Inc.
-// Released under the ISC license.
-// https://observablehq.com/@d3/line-with-tooltip
 
-function LineChart(data, {
-  x = ([x]) => x, // given d in data, returns the (temporal) x-value
-  y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
-  title, // given d in data, returns the title text
-  defined, // for gaps in data
-  curve = d3.curveLinear, // method of interpolation between points
-  marginTop = 20, // top margin, in pixels
-  marginRight = 30, // right margin, in pixels
-  marginBottom = 30, // bottom margin, in pixels
-  marginLeft = 40, // left margin, in pixels
-  width = 640, // outer width, in pixels
-  height = 400, // outer height, in pixels
-  xType = d3.scaleUtc, // type of x-scale
-  xDomain, // [xmin, xmax]
-  xRange = [marginLeft, width - marginRight], // [left, right]
-  yType = d3.scaleLinear, // type of y-scale
-  yDomain, // [ymin, ymax]
-  yRange = [height - marginBottom, marginTop], // [bottom, top]
-  color = "currentColor", // stroke color of line
-  strokeWidth = 1.5, // stroke width of line, in pixels
-  strokeLinejoin = "round", // stroke line join of line
-  strokeLinecap = "round", // stroke line cap of line
-  yFormat, // a format specifier string for the y-axis
-  yLabel, // a label for the y-axis
-} = {}) {
-  // Compute values.
-  const X = d3.map(data, x);
-  const Y = d3.map(data, y);
-  const O = d3.map(data, d => d);
-  const I = d3.map(data, (_, i) => i);
+var margin = { top: 30, right: 120, bottom: 30, left: 50 },
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom,
+    tooltip = { width: 100, height: 100, x: 10, y: -30 };
 
-  // Compute which data points are considered defined.
-  if (defined === undefined) defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
-  const D = d3.map(data, defined);
+var parseDate = d3.time.format("%m/%e/%Y").parse,
+    bisectDate = d3.bisector(function(d) { return d.date; }).left,
+    formatValue = d3.format(","),
+    dateFormatter = d3.time.format("%m/%d/%y");
 
-  // Compute default domains.
-  if (xDomain === undefined) xDomain = d3.extent(X);
-  if (yDomain === undefined) yDomain = [0, d3.max(Y)];
+var x = d3.time.scale()
+        .range([0, width]);
 
-  // Construct scales and axes.
-  const xScale = xType(xDomain, xRange);
-  const yScale = yType(yDomain, yRange);
-  const xAxis = d3.axisBottom(xScale).ticks(width / 80).tickSizeOuter(0);
-  const yAxis = d3.axisLeft(yScale).ticks(height / 40, yFormat);
+var y = d3.scale.linear()
+        .range([height, 0]);
 
-  // Compute titles.
-  if (title === undefined) {
-    const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
-    const formatValue = yScale.tickFormat(100, yFormat);
-    title = i => `${formatDate(X[i])}\n${formatValue(Y[i])}`;
-  } else {
-    const O = d3.map(data, d => d);
-    const T = title;
-    title = i => T(O[i], i, data);
-  }
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickFormat(dateFormatter);
 
-  // Construct a line generator.
-  const line = d3.line()
-      .defined(i => D[i])
-      .curve(curve)
-      .x(i => xScale(X[i]))
-      .y(i => yScale(Y[i]));
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(d3.format("s"))
 
-  const svg = d3.create("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .style("-webkit-tap-highlight-color", "transparent")
-      .style("overflow", "visible")
-      .on("pointerenter pointermove", pointermoved)
-      .on("pointerleave", pointerleft)
-      .on("touchstart", event => event.preventDefault());
+var line = d3.svg.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.likes); });
 
-  svg.append("g")
-      .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(xAxis);
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  svg.append("g")
-      .attr("transform", `translate(${marginLeft},0)`)
-      .call(yAxis)
-      .call(g => g.select(".domain").remove())
-      .call(g => g.selectAll(".tick line").clone()
-          .attr("x2", width - marginLeft - marginRight)
-          .attr("stroke-opacity", 0.1))
-      .call(g => g.append("text")
-          .attr("x", -marginLeft)
-          .attr("y", 10)
-          .attr("fill", "currentColor")
-          .attr("text-anchor", "start")
-          .text(yLabel));
+d3.tsv("./data/data.tsv", function(error, data) {
+    if (error) throw error;
 
-  svg.append("path")
-      .attr("fill", "none")
-      .attr("stroke", color)
-      .attr("stroke-width", strokeWidth)
-      .attr("stroke-linejoin", strokeLinejoin)
-      .attr("stroke-linecap", strokeLinecap)
-      .attr("d", line(I));
+    data.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.likes = +d.likes;
+    });
 
-  const tooltip = svg.append("g")
-      .style("pointer-events", "none");
+    data.sort(function(a, b) {
+        return a.date - b.date;
+    });
 
-  function pointermoved(event) {
-    const i = d3.bisectCenter(X, xScale.invert(d3.pointer(event)[0]));
-    tooltip.style("display", null);
-    tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(Y[i])})`);
+    x.domain([data[0].date, data[data.length - 1].date]);
+    y.domain(d3.extent(data, function(d) { return d.likes; }));
 
-    const path = tooltip.selectAll("path")
-      .data([,])
-      .join("path")
-        .attr("fill", "white")
-        .attr("stroke", "black");
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
-    const text = tooltip.selectAll("text")
-      .data([,])
-      .join("text")
-      .call(text => text
-        .selectAll("tspan")
-        .data(`${title(i)}`.split(/\n/))
-        .join("tspan")
-          .attr("x", 0)
-          .attr("y", (_, i) => `${i * 1.1}em`)
-          .attr("font-weight", (_, i) => i ? null : "bold")
-          .text(d => d));
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Number of Likes");
 
-    const {x, y, width: w, height: h} = text.node().getBBox();
-    text.attr("transform", `translate(${-w / 2},${15 - y})`);
-    path.attr("d", `M${-w / 2 - 10},5H-5l5,-5l5,5H${w / 2 + 10}v${h + 20}h-${w + 20}z`);
-    svg.property("value", O[i]).dispatch("input", {bubbles: true});
-  }
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
 
-  function pointerleft() {
-    tooltip.style("display", "none");
-    svg.node().value = null;
-    svg.dispatch("input", {bubbles: true});
-  }
+    var focus = svg.append("g")
+        .attr("class", "focus")
+        .style("display", "none");
 
-  return Object.assign(svg.node(), {value: null});
-}
+    focus.append("circle")
+        .attr("r", 5);
+
+    focus.append("rect")
+        .attr("class", "tooltip")
+        .attr("width", 100)
+        .attr("height", 50)
+        .attr("x", 10)
+        .attr("y", -22)
+        .attr("rx", 4)
+        .attr("ry", 4);
+
+    focus.append("text")
+        .attr("class", "tooltip-date")
+        .attr("x", 18)
+        .attr("y", -2);
+
+    focus.append("text")
+        .attr("x", 18)
+        .attr("y", 18)
+        .text("Likes:");
+
+    focus.append("text")
+        .attr("class", "tooltip-likes")
+        .attr("x", 60)
+        .attr("y", 18);
+
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .on("mouseover", function() { focus.style("display", null); })
+        .on("mouseout", function() { focus.style("display", "none"); })
+        .on("mousemove", mousemove);
+
+    function mousemove() {
+        var x0 = x.invert(d3.mouse(this)[0]),
+            i = bisectDate(data, x0, 1),
+            d0 = data[i - 1],
+            d1 = data[i],
+            d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        focus.attr("transform", "translate(" + x(d.date) + "," + y(d.likes) + ")");
+        focus.select(".tooltip-date").text(dateFormatter(d.date));
+        focus.select(".tooltip-likes").text(formatValue(d.likes));
+    }
+});
