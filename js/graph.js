@@ -5,9 +5,9 @@ var margin = { top: 30, right: 120, bottom: 30, left: 50 },
     tooltip = { width: 100, height: 100, x: 10, y: -30 };
 
 var parseDate = d3.time.format("%Y").parse,
-    bisectDate = d3.bisector(function(d) { return d.date; }).left,
+    bisectDate = d3.bisector(function(d) { return d.year; }).left,
     formatValue = d3.format(","),
-    dateFormatter = d3.time.format("%y");
+    dateFormatter = d3.time.format("%Y");
 
 var x = d3.time.scale()
         .range([0, width]);
