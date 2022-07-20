@@ -4,10 +4,10 @@ var margin = { top: 30, right: 120, bottom: 30, left: 50 },
     height = 500 - margin.top - margin.bottom,
     tooltip = { width: 100, height: 100, x: 10, y: -30 };
 
-var parseDate = d3.time.format("%m/%e/%Y").parse,
+var parseDate = d3.time.format("%Y").parse,
     bisectDate = d3.bisector(function(d) { return d.date; }).left,
     formatValue = d3.format(","),
-    dateFormatter = d3.time.format("%m/%d/%y");
+    dateFormatter = d3.time.format("%y");
 
 var x = d3.time.scale()
         .range([0, width]);
@@ -26,8 +26,8 @@ var yAxis = d3.svg.axis()
     .tickFormat(d3.format("s"))
 
 var line = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.likes); });
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.hdi); });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -35,20 +35,20 @@ var svg = d3.select("body").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("./data/data.tsv", function(error, data) {
+d3.csv("./data/hdi-bf.csv", function(error, data) {
     if (error) throw error;
 
     data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.likes = +d.likes;
+        d.year = parseDate(d.year);
+        d.hdi = +d.hdi;
     });
 
     data.sort(function(a, b) {
-        return a.date - b.date;
+        return a.year - b.year;
     });
 
-    x.domain([data[0].date, data[data.length - 1].date]);
-    y.domain(d3.extent(data, function(d) { return d.likes; }));
+    x.domain([data[0].year, data[data.length - 1].year]);
+    y.domain(d3.extent(data, function(d) { return d.hdi; }));
 
     svg.append("g")
         .attr("class", "x axis")
@@ -63,7 +63,7 @@ d3.tsv("./data/data.tsv", function(error, data) {
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Number of Likes");
+        .text("L'Indice de développement humain");
 
     svg.append("path")
         .datum(data)
@@ -87,17 +87,17 @@ d3.tsv("./data/data.tsv", function(error, data) {
         .attr("ry", 4);
 
     focus.append("text")
-        .attr("class", "tooltip-date")
+        .attr("class", "tooltip-year")
         .attr("x", 18)
         .attr("y", -2);
 
     focus.append("text")
         .attr("x", 18)
         .attr("y", 18)
-        .text("Likes:");
+        .text("L'IDH: ");
 
     focus.append("text")
-        .attr("class", "tooltip-likes")
+        .attr("class", "tooltip-hdi")
         .attr("x", 60)
         .attr("y", 18);
 
@@ -114,9 +114,9 @@ d3.tsv("./data/data.tsv", function(error, data) {
             i = bisectDate(data, x0, 1),
             d0 = data[i - 1],
             d1 = data[i],
-            d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-        focus.attr("transform", "translate(" + x(d.date) + "," + y(d.likes) + ")");
-        focus.select(".tooltip-date").text(dateFormatter(d.date));
-        focus.select(".tooltip-likes").text(formatValue(d.likes));
+            d = x0 - d0.year > d1.year - x0 ? d1 : d0;
+        focus.attr("transform", "translate(" + x(d.year) + "," + y(d.hdi) + ")");
+        focus.select(".tooltip-year").text(dateFormatter(d.year));
+        focus.select(".tooltip-hdi").text(formatValue(d.hdi));
     }
 });
