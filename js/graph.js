@@ -80,7 +80,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
     focus.append("rect")
         .attr("class", "tooltip")
         .attr("width", 100)
-        .attr("height", 50)
+        .attr("height", 100)
         .attr("x", 10)
         .attr("y", -22)
         .attr("rx", 4)
