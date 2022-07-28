@@ -14,7 +14,6 @@ var x = d3.time.scale()
 
 var y = d3.scale.linear()
         .range([height, 0]);
-        .domain([0,1]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
