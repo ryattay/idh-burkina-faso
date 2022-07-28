@@ -86,8 +86,13 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
         .attr("ry", 4);
 
     focus.append("text")
-        .attr("class", "tooltip-year")
         .attr("x", 18)
+        .attr("y", -2)
+        .text("Year: ");
+
+    focus.append("text")
+        .attr("class", "tooltip-year")
+        .attr("x", 50)
         .attr("y", -2);
 
     focus.append("text")
