@@ -78,8 +78,8 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("rect")
         .attr("class", "tooltip")
-        .attr("width", 100)
-        .attr("height", 100)
+        .attr("width", 200)
+        .attr("height", 150)
         .attr("x", 10)
         .attr("y", -22)
         .attr("rx", 4)
@@ -93,7 +93,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
     focus.append("text")
         .attr("x", 18)
         .attr("y", 18)
-        .text("L'IDH: ");
+        .text("IDH: ");
 
     focus.append("text")
         .attr("class", "tooltip-hdi")
@@ -101,9 +101,44 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
         .attr("y", 18);
 
     focus.append("text")
-        .attr("class", "tooltip-le")
         .attr("x", 18)
+        .attr("y", 38)
+        .text("Espérance de la vie à la naissance: ");
+
+    focus.append("text")
+        .attr("class", "tooltip-le")
+        .attr("x", 60)
         .attr("y", 38);
+
+    focus.append("text")
+        .attr("x", 18)
+        .attr("y", 58)
+        .text("Niveau d’éducation des enfants de 17 ans de plus: ");
+
+    focus.append("text")
+        .attr("class", "tooltip-eys")
+        .attr("x", 60)
+        .attr("y", 58);
+
+    focus.append("text")
+        .attr("x", 18)
+        .attr("y", 78)
+        .text("Années de scolarisation moyenne: ");
+
+    focus.append("text")
+        .attr("class", "tooltip-mys")
+        .attr("x", 60)
+        .attr("y", 78);
+
+    focus.append("text")
+        .attr("x", 18)
+        .attr("y", 98)
+        .text("PIB par habitant: ");
+
+    focus.append("text")
+        .attr("class", "tooltip-gnipc")
+        .attr("x", 60)
+        .attr("y", 98);
 
     svg.append("rect")
         .attr("class", "overlay")
@@ -123,5 +158,8 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
         focus.select(".tooltip-year").text(dateFormatter(d.year));
         focus.select(".tooltip-hdi").text(formatValue(d.hdi));
         focus.select(".tooltip-le").text(formatValue(d.le));
+        focus.select(".tooltip-eys").text(formatValue(d.eys));
+        focus.select(".tooltip-mys").text(formatValue(d.mys));
+        focus.select(".tooltip-gnipc").text(formatValue(d.gnipc));
     }
 });
