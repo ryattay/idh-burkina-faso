@@ -47,7 +47,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
     });
 
     x.domain([data[0].year, data[data.length - 1].year]);
-    y.domain(d3.extent(data, function(d) { return d.hdi; }));
+    y.domain([0, 1]);
 
     svg.append("g")
         .attr("class", "x axis")
