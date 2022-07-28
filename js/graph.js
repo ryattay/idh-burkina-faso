@@ -62,6 +62,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
+        .style("font-size","14px")
         .text("L'Indice de développement humain");
 
     svg.append("path")
