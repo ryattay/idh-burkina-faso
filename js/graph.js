@@ -23,7 +23,6 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-    .tickFormat(d3.format("s"))
 
 var line = d3.svg.line()
     .x(function(d) { return x(d.year); })
