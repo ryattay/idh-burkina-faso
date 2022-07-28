@@ -100,6 +100,11 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
         .attr("x", 60)
         .attr("y", 18);
 
+    focus.append("text")
+        .attr("class", "tooltip-le")
+        .attr("x", 18)
+        .attr("y", 38);
+
     svg.append("rect")
         .attr("class", "overlay")
         .attr("width", width)
@@ -117,5 +122,6 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
         focus.attr("transform", "translate(" + x(d.year) + "," + y(d.hdi) + ")");
         focus.select(".tooltip-year").text(dateFormatter(d.year));
         focus.select(".tooltip-hdi").text(formatValue(d.hdi));
+        focus.select(".tooltip-le").text(formatValue(d.le));
     }
 });
