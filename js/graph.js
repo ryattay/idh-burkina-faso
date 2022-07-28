@@ -97,7 +97,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-hdi")
-        .attr("x", 60)
+        .attr("x", 45)
         .attr("y", 18);
 
     focus.append("text")
@@ -107,7 +107,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-le")
-        .attr("x", 60)
+        .attr("x", 250)
         .attr("y", 38);
 
     focus.append("text")
@@ -117,7 +117,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-eys")
-        .attr("x", 60)
+        .attr("x", 350)
         .attr("y", 58);
 
     focus.append("text")
@@ -127,7 +127,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-mys")
-        .attr("x", 60)
+        .attr("x", 225)
         .attr("y", 78);
 
     focus.append("text")
@@ -137,7 +137,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-gnipc")
-        .attr("x", 60)
+        .attr("x", 150)
         .attr("y", 98);
 
     svg.append("rect")
