@@ -1,5 +1,5 @@
 
-var margin = { top: 30, right: 120, bottom: 30, left: 50 },
+var margin = { top: 30, right: 400, bottom: 30, left: 50 },
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     tooltip = { width: 100, height: 100, x: 10, y: -30 };
@@ -78,7 +78,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("rect")
         .attr("class", "tooltip")
-        .attr("width", 400)
+        .attr("width", 380)
         .attr("height", 140)
         .attr("x", 10)
         .attr("y", -22)
@@ -92,7 +92,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-year")
-        .attr("x", 60)
+        .attr("x", 50)
         .attr("y", -2);
 
     focus.append("text")
@@ -112,7 +112,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-le")
-        .attr("x", 240)
+        .attr("x", 245)
         .attr("y", 38);
 
     focus.append("text")
@@ -122,7 +122,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-eys")
-        .attr("x", 330)
+        .attr("x", 340)
         .attr("y", 58);
 
     focus.append("text")
@@ -132,7 +132,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-mys")
-        .attr("x", 240)
+        .attr("x", 235)
         .attr("y", 78);
 
     focus.append("text")
@@ -142,7 +142,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-gnipc")
-        .attr("x", 120)
+        .attr("x", 125)
         .attr("y", 98);
 
     svg.append("rect")
