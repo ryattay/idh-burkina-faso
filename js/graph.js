@@ -1,5 +1,5 @@
 
-var margin = { top: 30, right: 400, bottom: 30, left: 50 },
+var margin = { top: 30, right: 440, bottom: 30, left: 50 },
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     tooltip = { width: 100, height: 100, x: 10, y: -30 };
@@ -79,7 +79,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("rect")
         .attr("class", "tooltip")
-        .attr("width", 380)
+        .attr("width", 420)
         .attr("height", 140)
         .attr("x", 10)
         .attr("y", -22)
@@ -113,7 +113,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-le")
-        .attr("x", 275)
+        .attr("x", 280)
         .attr("y", 38);
 
     focus.append("text")
@@ -143,7 +143,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-gnipc")
-        .attr("x", 155)
+        .attr("x", 200)
         .attr("y", 98);
 
     svg.append("rect")
