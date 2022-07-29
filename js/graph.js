@@ -143,7 +143,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
 
     focus.append("text")
         .attr("class", "tooltip-gnipc")
-        .attr("x", 200)
+        .attr("x", 235)
         .attr("y", 98);
 
     svg.append("rect")
