@@ -109,7 +109,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
     focus.append("text")
         .attr("x", 18)
         .attr("y", 38)
-        .text("Espérance de la vie à la naissance: ");
+        .text("Espérance de la vie à la naissance (ans): ");
 
     focus.append("text")
         .attr("class", "tooltip-le")
@@ -119,7 +119,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
     focus.append("text")
         .attr("x", 18)
         .attr("y", 58)
-        .text("Niveau d’éducation des enfants de 17 ans de plus: ");
+        .text("Niveau d’éducation des enfants de 17 ans de plus (ans): ");
 
     focus.append("text")
         .attr("class", "tooltip-eys")
@@ -139,7 +139,7 @@ d3.csv("./data/hdi-bf.csv", function(error, data) {
     focus.append("text")
         .attr("x", 18)
         .attr("y", 98)
-        .text("PIB par habitant: ");
+        .text("PIB par habitant (PPA 2017 USD): ");
 
     focus.append("text")
         .attr("class", "tooltip-gnipc")
